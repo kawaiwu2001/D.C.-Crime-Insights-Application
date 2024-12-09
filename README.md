@@ -27,7 +27,77 @@ Features Not Specifically in the Application:
 
 ## Usage:
 
-Usage section
+### Dashboard
+
+Displays information for the Total Crimes, Top Crime Type, High Crime Zone, Method of Crime, and Shift at the top of the application. Also displays a line graph for the number of crimes colored by offense over 5-6 years, a pie chart showing the number of crimes colored by offense over the past 30 days, and a bar chart showing the number of crimes for each month over the 2024 year.
+
+![Dashboard](git_repo_photos/homepage_insights_app.png)
+
+---
+
+### Chatbot
+
+The chatbot allows users to ask questions and recieve insights based on crime data from the database. This feature can be used to quickly retrieve information without navigating through the different parts of the Crime Insights Application. Here the user is getting a response to the question "What ward saw the most crimes in the year 2023?"
+
+![Chatbot](git_repo_photos/chatbot_insights_app.png)
+
+---
+
+### Crime Map
+
+The crime map allows users to view crimes on a map in the D.C. area. The user can filter by crime type, crime zone, and even crimes dates as seen in the example where the user is filtering by theft/other for zone 4 over November 15, 2024 - November 29, 2024.
+
+![Chatbot](git_repo_photos/crime_map_insights_app.png)
+
+---
+
+### Reports
+
+The Crime Report Generator is used to return a list of all the crimes that occured between certain dates for a neighborhood cluster. In this example, we are recieving all the crimes that occured in neighborhood cluster 3 between the dates of 10/05/2024 and 12/05/2024.
+
+![Chatbot](git_repo_photos/reports_insights_app.png)
+
+---
+
+### Crime Prediction (Linear Regresssion Graph)
+
+The Linear Regression Graph on the Crime Prediction page displays a linear regression line for the number of crimes that occured over a week for the given type of crime over the past two years. Additionally, there is a dotted line after the linear regression line that can be used to predict the number of crimes that will occur for following weeks in the future, based on the type of crime. In the following example we filter by theft/other as well as theft f/auto and motor vehicle theft.
+
+![Chatbot](git_repo_photos/regression_insights_app.png)
+
+---
+
+### Crime Prediction (Advanced Predictions)
+
+The Advanced Predictions Page can be used to display the number of crimes predicted for the various types of crimes over a certain time frame for different regions. In the following example, we are predicting the number of crimes that will occur across different wards over the next two years. For example, we can indicate that Ward 8 is projected to see much more homicides over the next year than ward 2.
+
+![Chatbot](git_repo_photos/advanced_predictions_insights_app.png)
+
+---
+
+### Safe Routing
+
+The saftey routing page is used to genearate a safe route for users to take based on historical crime data. Inn the following example, we predict a route from the White House to Union Station using our safe routing feature to avoid high crime areas.
+
+![Chatbot](git_repo_photos/saftey_routing_insights_app.png)
+
+---
+
+### Public Saftey Resources
+
+Resource Page used to help connect people to organizations to report emergencies and crimes.
+
+![Chatbot](git_repo_photos/saftey_resources_insights_app.png)
+
+---
+
+### Settings
+
+Settings page used to adjust the color of the sidebar.
+
+![Chatbot](git_repo_photos/settings_insights_app.png)
+
+---
 
 ## Tech Stack
 
@@ -40,6 +110,8 @@ Usage section
   - Plotly.js (for graphs and data visualization)
 - **Styling:** CSS, Mantine custom themes
 
+---
+
 ### **Backend**
 
 - **Framework:** FastAPI (Python) - powers our API and backend services
@@ -51,17 +123,23 @@ Usage section
   - Geopy, Polyline (for location-based routing)
   - Pydantic (for data validation)
 
+---
+
 ### **Cloud Services (AWS)**
 
 - **Amazon RDS:** Hosts our live database
 - **AWS Lambda:** Handles serverless computing tasks
 - **Amazon EventBridge:** Automates database updates on a scheduled basis
 
+---
+
 ### **Deployment & Version Control**
 
 - **Version Control:** Git (GitHub for code management)
 - **Deployment:** AWS EC2 (for hosting the application and backend services)
 - **Task Automation:** AWS Lambda & EventBridge for automatic data updates
+
+---
 
 ### Data Souce
 
@@ -82,6 +160,8 @@ To run the code there are many dependencies that need to be installed from the t
 - npm install date-fns
 - npm install @mantine/core @mantine/dates
 - npm install plotly.js-dist
+
+---
 
 ### PIP Installs
 
@@ -113,13 +193,9 @@ To run the code there are many dependencies that need to be installed from the t
 
    npm start
 
-## Usage
-
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
 ## Project status
 
-As of 12/11/2024 the team will no longer be working on the project. Additionally, the database will be shut down after the final project is graded because we are currently paying to use Amazon RDS resources by having it deployed on the internet. If you desire to fork the project, you should change the credentials to connect to the a new database and use the various functions defined in the crime_database.py file to create and populate the tables by downloading the csv files from where we gathered our data from: https://crimecards.dc.gov/. However, changes the application must not be used for commercial use and must follow our creative license http://creativecommons.org/licenses/by-nc/4.0/.
+As of 12/11/2024, the team will no longer be working on the project. Additionally, the database will be shut down after the final project is graded because we are currently paying to use Amazon RDS resources by having it deployed on the internet. If you desire to fork the project, you should change the credentials in mysql.connector to connect to the a new database and use the various functions defined in the crime_database.py file to create and populate the tables by downloading the csv files from where we gathered our data from: https://crimecards.dc.gov/. However, changes the application must not be used for commercial use and must follow our creative license http://creativecommons.org/licenses/by-nc/4.0/.
 
 ## Support
 
