@@ -8,9 +8,14 @@ Users planning on running this application should have the latest versions of No
 
 ## Data Souce
 
-Data Gathered and used for this project can be found at the following links:
+Data used for this project can be found using the following link:
 
-- https://crimecards.dc.gov/
+- First, go to the website: https://crimecards.dc.gov/
+
+- Next, press the download data link which is displayed above the Totals, Crime Map, and In Summary sections. You can also filter by your criteria using the boxes above.
+
+Data used for the autoscheduler can be found using the following API link:
+
 - API JSON Link: https://maps2.dcgis.dc.gov/dcgis/rest/services/FEEDS/MPD/MapServer/8/query?where=1%3D1&outFields=CCN,REPORT_DAT,SHIFT,LATITUDE,LONGITUDE,WARD,NEIGHBORHOOD_CLUSTER,ANC,PSA,VOTING_PRECINCT,METHOD,OFFENSE&outSR=4326&f=json&orderByFields=REPORT_DAT%20DESC&resultRecordCount=1000
 
 ## Installation
@@ -58,10 +63,6 @@ To run the code there are many dependencies that need to be installed from the t
 
    npm start
 
-## Project status
-
-As of 12/13/2024, the team will no longer be working on the project. Additionally, the database will be shut down after the final project is graded because we are currently paying to use Amazon RDS resources by having it deployed on the internet. If you desire to fork the project, you should change the credentials in mysql.connector to connect to a new database and use the various functions defined in the crime_database.py file to create and populate the tables by downloading a .csv file from where we gathered our data from: https://crimecards.dc.gov/. However, the application must not be used for commercial use and must follow our creative license http://creativecommons.org/licenses/by-nc/4.0/.
-
 ## Description
 
 The D.C. Crime Insights Application can be used to analyze valuable data regarding D.C. crime statistics. The application has multiple different pages that serve different functions.
@@ -76,7 +77,7 @@ The D.C. Crime Insights Application can be used to analyze valuable data regardi
 - Public Safety Resources: The page provides various resources users can look at to help report crimes or keep them safe.
 - Settings: This page can be used to change the colors in the sidebar to help make the application look nicer.
 
-Features Working in the Background of the Web Application:
+Features Working in the Background for the Web Application:
 
 - Live Database Hosted Using AWS: The database is currently hosted on Amazon RDS. All calls used to gather data in the application pull data from the tables hosted in the live database.
 - Database Autoscheduler: This uses Amazon Lambda and Amazon EventBridge to automatically schedule updates to the database to add new crimes. The code used is in the backend section of the database but does not work if you try to run the Python file since its the code is built to be run using Amazon Lambda.
@@ -230,6 +231,10 @@ The following project was guided under Professor Soheil Sibdari
 - Kuan-Fu Lin
 - Pei-Hsuan Sung (Patty)
 - Venkata Chaitanya Kanakamedala
+
+## Project status
+
+As of 12/13/2024, the team will no longer be working on the project. Additionally, the database will be shut down after the final project is graded because we are currently paying to use Amazon RDS resources by having it deployed on the internet. If you desire to fork the project, you should change the credentials in mysql.connector to connect to a new database and use the various functions defined in the crime_database.py file to create and populate the tables by downloading a .csv file from where we gathered our data from: https://crimecards.dc.gov/. However, the application must not be used for commercial use and must follow our creative license http://creativecommons.org/licenses/by-nc/4.0/.
 
 ## License
 
