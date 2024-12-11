@@ -6,6 +6,62 @@
 
 Users planning on running this application should have Node.js and Python installed, as well as the latest versions of the Windows, Mac, or Linux operating systems.
 
+### Data Souce
+
+Data Gathered and used for this project can be found at the following links:
+
+- https://crimecards.dc.gov/
+- API JSON Link: https://maps2.dcgis.dc.gov/dcgis/rest/services/FEEDS/MPD/MapServer/8/query?where=1%3D1&outFields=CCN,REPORT_DAT,SHIFT,LATITUDE,LONGITUDE,WARD,NEIGHBORHOOD_CLUSTER,ANC,PSA,VOTING_PRECINCT,METHOD,OFFENSE&outSR=4326&f=json&orderByFields=REPORT_DAT%20DESC&resultRecordCount=1000
+
+## Installation
+
+To run the code there are many dependencies that need to be installed from the terminal. Below is a list of these dependencies. Although we have tried to include all of them, there may be more that we have forgotten to include. If that is the case, your terminal should inform you which dependencies you need to install as you try launching the application.
+
+### NPM Installs:
+
+- npm install leaflet react-leaflet
+- npm install leaflet
+- npm install react-datepicker
+- npm install date-fns
+- npm install @mantine/core @mantine/dates
+- npm install plotly.js-dist
+
+---
+
+### PIP Installs:
+
+- pip install fastapi
+- pip install uvicorn[standard]
+- pip install mysql-connector-python
+- pip install scikit-learn
+- pip install xgboost
+- pip install numpy
+- pip install pandas
+- pip install scipy
+- pip install geopy
+- pip install requests
+- pip install polyline
+- pip install pydantic
+- pip install langchain
+
+### Runing the application
+
+1. Open up two terminals
+
+2. In terminal 1:
+
+   cd backend
+
+   uvicorn main:app --reload
+
+3. In terminal 2:
+
+   npm start
+
+## Project status
+
+As of 12/13/2024, the team will no longer be working on the project. Additionally, the database will be shut down after the final project is graded because we are currently paying to use Amazon RDS resources by having it deployed on the internet. If you desire to fork the project, you should change the credentials in mysql.connector to connect to a new database and use the various functions defined in the crime_database.py file to create and populate the tables by downloading a .csv file from where we gathered our data from: https://crimecards.dc.gov/. However, the application must not be used for commercial use and must follow our creative license http://creativecommons.org/licenses/by-nc/4.0/.
+
 ## Description
 
 The D.C. Crime Insights Application can be used to analyze valuable data regarding D.C. crime statistics. The application has multiple different pages that serve different functions.
@@ -141,66 +197,6 @@ Settings page is used to adjust the color of the sidebar.
 
 ---
 
-### Data Souce
-
-Data Gathered and used for this project can be found at the following links:
-
-- https://crimecards.dc.gov/
-- API JSON Link: https://maps2.dcgis.dc.gov/dcgis/rest/services/FEEDS/MPD/MapServer/8/query?where=1%3D1&outFields=CCN,REPORT_DAT,SHIFT,LATITUDE,LONGITUDE,WARD,NEIGHBORHOOD_CLUSTER,ANC,PSA,VOTING_PRECINCT,METHOD,OFFENSE&outSR=4326&f=json&orderByFields=REPORT_DAT%20DESC&resultRecordCount=1000
-
-## Installation
-
-To run the code there are many dependencies that need to be installed from the terminal. Below is a list of these dependencies. Although we have tried to include all of them, there may be more that we have forgotten to include. If that is the case, your terminal should inform you which dependencies you need to install as you try launching the application.
-
-### NPM Installs:
-
-- npm install leaflet react-leaflet
-- npm install leaflet
-- npm install react-datepicker
-- npm install date-fns
-- npm install @mantine/core @mantine/dates
-- npm install plotly.js-dist
-
----
-
-### PIP Installs:
-
-- pip install fastapi
-- pip install uvicorn[standard]
-- pip install mysql-connector-python
-- pip install scikit-learn
-- pip install xgboost
-- pip install numpy
-- pip install pandas
-- pip install scipy
-- pip install geopy
-- pip install requests
-- pip install polyline
-- pip install pydantic
-- pip install langchain
-
-### Runing the application
-
-1. Open up two terminals
-
-2. In terminal 1:
-
-   cd backend
-
-   uvicorn main:app --reload
-
-3. In terminal 2:
-
-   npm start
-
-## Project status
-
-As of 12/11/2024, the team will no longer be working on the project. Additionally, the database will be shut down after the final project is graded because we are currently paying to use Amazon RDS resources by having it deployed on the internet. If you desire to fork the project, you should change the credentials in mysql.connector to connect to a new database and use the various functions defined in the crime_database.py file to create and populate the tables by downloading a .csv file from where we gathered our data from: https://crimecards.dc.gov/. However, the application must not be used for commercial use and must follow our creative license http://creativecommons.org/licenses/by-nc/4.0/.
-
-## Support
-
-The project was developed by Capstone Group 10 - CS 5934. For more information about the project, you can contact our professor ssibdari@vt.edu as team members emails will be deprecated in the near future. Additionally, you can view the repository: https://code.vt.edu/sungpeihsuan/crime-report-web-application
-
 ## Roadmap
 
 Roadmap for future improvements to our application:
@@ -212,6 +208,10 @@ Roadmap for future improvements to our application:
 - The application currently does not support mobile devices. Making the application mobile-friendly would also be a great addition.
 
 This is also the link to our group's Kanban board. Note that you may need to request to access it: https://venkata-chaitanya-kanakamedala.atlassian.net/jira/software/projects/CRWA/boards/2
+
+## Support
+
+The project was developed by Capstone Group 10 - CS 5934. For more information about the project, you can contact our professor ssibdari@vt.edu as team members emails will be deprecated in the near future. Additionally, you can view the repository: https://code.vt.edu/sungpeihsuan/crime-report-web-application
 
 ## Contributing
 
