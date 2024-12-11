@@ -4,9 +4,9 @@
 
 ## Before you Begin
 
-Users planning on running this application should have Node.js and Python installed, as well as the latest versions of the Windows, Mac, or Linux operating systems.
+Users planning on running this application should have the latest versions of Node.js and Python installed, as well as the latest versions of the Windows, Mac, or Linux operating systems.
 
-### Data Souce
+## Data Souce
 
 Data Gathered and used for this project can be found at the following links:
 
