@@ -73,6 +73,7 @@ crime_category_mapping = {
 
 def calculate_trends():
 
+    # establish connection
     conn = establish_connection()
     if conn is None:
         return {"error": "Failed to connect to the database."}
@@ -128,6 +129,7 @@ def calculate_trends():
 @app.get("/api/dashboard")
 def analyze_data():
 
+    # establish connection
     conn = establish_connection()
     if conn is None:
         return {"error": "Failed to connect to the database."}
@@ -225,11 +227,15 @@ async def test_endpoint():
 
 @app.get("/api/crime-data")
 def get_crime_data(crimeType: str = None, zone: str = None, startDate: str = None, endDate: str = None):
+
+    # establish connection
     conn = establish_connection()
     if conn is None:
         return {"error": "Failed to connect to the database."}
 
     try:
+
+        # Get start and end dates
         if not startDate:
             startDate = (datetime.now() - timedelta(days=30)
                          ).strftime("%Y-%m-%d")
@@ -269,7 +275,7 @@ def get_crime_data(crimeType: str = None, zone: str = None, startDate: str = Non
         cursor.execute(query, params)
         result = cursor.fetchall()
 
-       # Format the result
+        # Format the result
         filtered_data = []
         for idx, row in enumerate(result):
             crime_date_obj = pd.to_datetime(row['crime_date'])  # Parse date
@@ -295,6 +301,8 @@ def get_crime_data(crimeType: str = None, zone: str = None, startDate: str = Non
 
 @app.get("/api/crime-types")
 def get_crime_types():
+
+    # establish connection
     conn = establish_connection()
     if conn is None:
         return {"error": "Failed to connect to the database."}
@@ -325,6 +333,8 @@ def get_crime_types():
 
 @app.get("/api/crime-zones")
 def get_crime_zones():
+
+    # establish connection
     conn = establish_connection()
     if conn is None:
         return {"error": "Failed to connect to the database."}
@@ -357,6 +367,7 @@ def get_crime_zones():
 
 def establish_connection():
     try:
+        # Connect to the MySQL database
         conn = mysql.connector.connect(
             host="database-crime-dc.cxqaw406cjk5.us-east-1.rds.amazonaws.com",
             user="admin",
@@ -374,6 +385,8 @@ def establish_connection():
 
 @app.get("/api/crime-prediction")
 def get_crime_prediction_data():
+
+    # establish connection
     conn = establish_connection()
     if conn is None:
         return {"error": "Failed to connect to the database."}
@@ -414,6 +427,7 @@ def get_crime_prediction_data():
     df['week_start_date'] = df['week'].apply(
         lambda yw: datetime.strptime(f"{yw}1", "%Y%W%w"))
     
+    # Map offenses to colors
     colors = {
         "theft/other": "red",
         "theft f/auto": "blue",
@@ -472,6 +486,8 @@ def get_crime_prediction_data():
 
 @app.get("/api/area-time-crime-prediction")
 def get_area_time_crime_prediction(area: str, timeframe: str):
+
+    # establish connection
     conn = establish_connection()
     if conn is None:
         return {"error": "Failed to connect to the database."}
@@ -509,6 +525,7 @@ def get_area_time_crime_prediction(area: str, timeframe: str):
         if not data:
             return {"error": "No data available for the selected criteria"}
 
+        # Convert the data into a DataFrame
         df = pd.DataFrame(data)
         df['report_date_time'] = pd.to_datetime(df['report_date_time'])
 
@@ -533,6 +550,7 @@ def get_area_time_crime_prediction(area: str, timeframe: str):
         X_train, X_test = X.iloc[:train_size], X.iloc[train_size:]
         y_train, y_test = y.iloc[:train_size], y.iloc[train_size:]
 
+        # Train the model
         pipeline = Pipeline([
             ('scaler', StandardScaler()),
             ('model', xgb.XGBRegressor(
@@ -619,6 +637,8 @@ class CrimeReport(BaseModel):
 
 
 def load_data_from_db():
+
+    # Connect to the database
     mydb = establish_connection()
     if mydb is None:
         return None
@@ -663,82 +683,6 @@ def load_data_from_db():
         return None
     finally:
         mydb.close()
-
-# Endpoint to get crime report data based on date and location
-# @app.get("/report", response_model=List[dict])  # Assuming the response model is a list of dictionaries
-# def get_report(start_date: str, end_date: str, location: str):
-#     # Load data from the database
-#     df = load_data_from_db()
-#     if df is None:
-#         return {"error": "Failed to load data from the database."}
-
-#     # Filter the DataFrame based on provided parameters
-#     filtered_data = df[
-#         (df['REPORT_DAT'] >= pd.to_datetime(start_date)) &
-#         (df['REPORT_DAT'] <= pd.to_datetime(end_date)) &
-#         (df['neighborhood_clusters'] == location)
-#     ]
-
-#     if filtered_data.empty:
-#         return {"error": "No data available for the specified filters."}
-
-#     return filtered_data.to_dict(orient='records')  # Return the filtered data as a list of dictionaries
-
-# @app.get("/report", response_model=List[CrimeReport])
-# def get_report(start_date: str, end_date: str, location: str):
-#     # Load data from the database
-#     df = load_data_from_db()
-#     if df is None:
-#         return []  # Return an empty list instead of an error message
-
-#     # Convert start_date and end_date to timezone-aware UTC datetimes
-#     try:
-#         start_date_utc = pd.to_datetime(start_date).tz_localize('UTC')
-#         end_date_utc = pd.to_datetime(end_date).tz_localize('UTC')
-#     except Exception as e:
-#         return []  # Return an empty list if date parsing fails
-
-#     # Filter the DataFrame based on provided parameters
-#     filtered_data = df[
-#         (df['REPORT_DAT'] >= start_date_utc) &
-#         (df['REPORT_DAT'] <= end_date_utc) &
-#         (df['neighborhood_clusters'] == location)
-#     ]
-
-#     if filtered_data.empty:
-#         return []  # Return an empty list if no data is found
-
-#     return filtered_data.to_dict(orient='records')  # Return the filtered data as a list of dictionaries
-
-# @app.get("/report", response_model=List[CrimeReport])
-# def get_report(start_date: str, end_date: str, location: str):
-#     # Load data from the database
-#     df = load_data_from_db()
-#     if df is None:
-#         return {"error": "Failed to load data from the database."}
-
-#     # Convert start_date and end_date to UTC
-#     start_date = pd.to_datetime(start_date).tz_localize('UTC')
-#     end_date = pd.to_datetime(end_date).tz_localize('UTC')
-
-#     # Filter the DataFrame based on provided parameters
-#     filtered_data = df[
-#         (df['REPORT_DAT'] >= start_date) &
-#         (df['REPORT_DAT'] <= end_date) &
-#         (df['neighborhood_clusters'] == location)
-#     ]
-
-#     if filtered_data.empty:
-#         return {"error": "No data available for the specified filters."}
-
-#     # Convert fields to string before returning
-#     result = filtered_data.to_dict(orient='records')
-#     for row in result:
-#         row['ccn'] = str(row['ccn'])  # Convert CCN to string
-#         row['REPORT_DAT'] = row['REPORT_DAT'].strftime('%Y-%m-%d %H:%M:%S')  # Convert datetime to string
-#         row['ward'] = str(row['ward'])  # Convert ward to string
-
-#     return result  # Return the filtered data as a list of dictionaries
 
 
 @app.get("/api/report", response_model=List[CrimeReport])
@@ -793,8 +737,10 @@ def get_neighborhood_clusters():
 @app.get("/api/download_report")
 async def download_report(name: str, start_date: str, end_date: str, location: str):
     try:
+        # Get the report data
         report_data = get_report(start_date, end_date, location)
 
+        # Generate the HTML content
         filename = f"crime_report_{name}_{start_date}_{end_date}.pdf"
         file_path = REPORTS_DIR / filename
 
@@ -869,6 +815,7 @@ async def download_report(name: str, start_date: str, end_date: str, location: s
             raise HTTPException(
                 status_code=404, detail="Report generation failed")
 
+        # Return the file
         return FileResponse(
             path=str(file_path),
             filename=filename,
@@ -882,13 +829,13 @@ async def download_report(name: str, start_date: str, end_date: str, location: s
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
-@app.get("/api/generate_report")
-def generate_report(name: str, start_date: str, end_date: str, location: str):
-    report_html = f"<html><body><h1>Report for {name}</h1><p>Start Date: {start_date}</p><p>End Date: {end_date}</p><p>Location: {location}</p></body></html>"
-    file_path = f"./generated_reports/{name}_crime_report.pdf"
-    pdfkit.from_string(report_html, file_path)
-    return {"message": "Report generated successfully", "file_path": file_path}
+"""Original Code for generating pdf version of the report, code has been depricated"""
+# @app.get("/api/generate_report")
+# def generate_report(name: str, start_date: str, end_date: str, location: str):
+#     report_html = f"<html><body><h1>Report for {name}</h1><p>Start Date: {start_date}</p><p>End Date: {end_date}</p><p>Location: {location}</p></body></html>"
+#     file_path = f"./generated_reports/{name}_crime_report.pdf"
+#     pdfkit.from_string(report_html, file_path)
+#     return {"message": "Report generated successfully", "file_path": file_path}
 
 
 # for ChatBot
@@ -896,12 +843,12 @@ def generate_report(name: str, start_date: str, end_date: str, location: str):
 class ChatRequest(BaseModel):
     message: str
 
-
+# Define the OpenAI API key
 OPENAI_API_KEY = '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'
 
 # Initialize database connection
 
-
+# Another way to connect to the database
 def init_database():
     user = "admin"
     password = "capstonegroup10"
@@ -910,6 +857,7 @@ def init_database():
     database = "crime_database"
 
     db_uri = f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{database}"
+    # Connect to the database
     return SQLDatabase.from_uri(db_uri)
 
 # Define AI response logic
@@ -929,6 +877,7 @@ def get_sql_chain(db):
     Question: {question}
     SQL Query:
     """
+    # Initialize the LLM
     prompt = ChatPromptTemplate.from_template(template)
     llm = ChatOpenAI(model="gpt-4-0125-preview", openai_api_key=OPENAI_API_KEY)
 
@@ -969,6 +918,7 @@ def get_response(user_query: str, db: SQLDatabase, chat_history: list):
     User question: {question}
     SQL Response: {response}"""
 
+    # Initialize the LLM
     prompt = ChatPromptTemplate.from_template(template)
 
     # Pass API key here
@@ -984,6 +934,7 @@ def get_response(user_query: str, db: SQLDatabase, chat_history: list):
         | StrOutputParser()
     )
 
+    # Execute the chain
     return chain.invoke({
         "question": user_query,
         "chat_history": chat_history,
@@ -992,6 +943,8 @@ def get_response(user_query: str, db: SQLDatabase, chat_history: list):
 
 # for stacked bar chart
 def calculate_monthly_crime_data():
+
+    # Connect to the database
     conn = establish_connection()
     if conn is None:
         return {"error": "Failed to connect to the database."}
@@ -1048,6 +1001,7 @@ def calculate_monthly_crime_data():
 
 @app.get("/api/monthly-crime-data")
 def get_monthly_crime_data():
+    # Calculate monthly crime data
     monthly_data = calculate_monthly_crime_data()
     if "error" in monthly_data:
         raise HTTPException(status_code=500, detail=monthly_data["error"])
@@ -1060,130 +1014,6 @@ import polyline
 
 geolocator = Nominatim(user_agent="safe_routing_app")
 geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
-
-# @app.get("/api/safe-route")
-# def calculate_safe_route(start: str, destination: str):
-#     """
-#     Calculate a safe route using Google Maps Directions API, considering crime locations.
-#     """
-#     try:
-#         # Step 1: Geolocate start and destination
-#         start_location = geolocator.geocode(f"{start}, Washington, DC, USA")
-#         destination_location = geolocator.geocode(f"{destination}, Washington, DC, USA")
-
-#         if not start_location or not destination_location:
-#             raise HTTPException(status_code=400, detail="Invalid start or destination address.")
-
-#         start_coords = (start_location.latitude, start_location.longitude)
-#         destination_coords = (destination_location.latitude, destination_location.longitude)
-
-#         logging.debug(f"Start address: {start_location.address} -> Coordinates: {start_coords}")
-#         logging.debug(f"Destination address: {destination_location.address} -> Coordinates: {destination_coords}")
-
-#         # Step 2: Fetch recent crimes from the database
-#         conn = establish_connection()
-#         if conn is None:
-#             raise HTTPException(status_code=500, detail="Database connection failed.")
-
-#         cursor = conn.cursor(dictionary=True)
-#         query = """
-#             SELECT rl.latitude, rl.longitude, om.offense, rt.report_date_time
-#             FROM report_location rl
-#             JOIN report_time rt ON rl.ccn = rt.ccn
-#             JOIN offense_and_method om ON rt.ccn = om.ccn
-#             WHERE rt.report_date_time >= NOW() - INTERVAL 7 DAY;
-#               AND rl.latitude IS NOT NULL
-#               AND rl.longitude IS NOT NULL;
-#         """
-#         cursor.execute(query)
-#         recent_crimes = cursor.fetchall()
-#         cursor.close()
-#         conn.close()
-
-#         # Step 3: Identify dangerous areas
-#         dangerous_areas = [
-#             {
-#                 "lat": crime["latitude"],
-#                 "lng": crime["longitude"],
-#                 "type": crime["offense"],
-#                 "date": crime["report_date_time"].strftime("%Y-%m-%d %H:%M:%S")
-#             }
-#             for crime in recent_crimes
-#         ]
-#         logging.debug(f"Number of dangerous areas fetched: {len(dangerous_areas)}")
-
-#         # Step 4: Reduce waypoints to avoid exceeding Google API limit
-#         def reduce_waypoints(danger_areas, max_waypoints=20):
-#             if len(danger_areas) <= max_waypoints:
-#                 return danger_areas
-#             # Use clustering (e.g., K-means) or select evenly spaced waypoints
-#             step = len(danger_areas) // max_waypoints
-#             return [danger_areas[i] for i in range(0, len(danger_areas), step)][:max_waypoints]
-
-#         reduced_danger_areas = reduce_waypoints(dangerous_areas)
-#         logging.debug(f"Reduced number of dangerous areas to: {len(reduced_danger_areas)}")
-
-#         # Step 5: Check if Google Maps route intersects with reduced dangerous areas
-#         def is_near_danger(lat, lng, danger_areas, radius=500):
-#             for danger in danger_areas:
-#                 distance = geodesic((lat, lng), (danger["lat"], danger["lng"])).meters
-#                 if distance <= radius:
-#                     return True
-#             return False
-
-#         # Step 6: Call Google Maps Directions API for the initial route
-#         url = "https://maps.googleapis.com/maps/api/directions/json"
-#         params = {
-#             "origin": f"{start_coords[0]},{start_coords[1]}",
-#             "destination": f"{destination_coords[0]},{destination_coords[1]}",
-#             "mode": "driving",
-#             "key": "AIzaSyCHlL5PC4A9jE1rSRTxQT1dcILKiL17V2A"
-#         }
-#         response = requests.get(url, params=params)
-#         if response.status_code != 200:
-#             raise HTTPException(status_code=500, detail=f"HTTP error: {response.status_code}, {response.text}")
-
-#         data = response.json()
-#         if data["status"] != "OK":
-#             raise HTTPException(status_code=500, detail=f"Google API error: {data['status']}")
-
-#         # Decode the initial route polyline
-#         route_points = polyline.decode(data["routes"][0]["overview_polyline"]["points"])
-#         initial_route = [{"lat": lat, "lng": lng} for lat, lng in route_points]
-
-#         # Step 7: Modify the route if it intersects with reduced dangerous areas
-#         waypoints = []
-#         for point in initial_route:
-#             if is_near_danger(point["lat"], point["lng"], reduced_danger_areas):
-#                 logging.debug(f"Dangerous point detected near {point}. Adding waypoint.")
-#                 waypoints.append(point)
-
-#         if waypoints:
-#             # Recalculate the route using waypoints to avoid dangerous areas
-#             waypoint_str = "|".join([f"{wp['lat']},{wp['lng']}" for wp in waypoints])
-#             params["waypoints"] = f"optimize:true|{waypoint_str}"
-#             response = requests.get(url, params=params)
-#             if response.status_code != 200:
-#                 raise HTTPException(status_code=500, detail=f"HTTP error: {response.status_code}, {response.text}")
-
-#             data = response.json()
-#             if data["status"] != "OK":
-#                 raise HTTPException(status_code=500, detail=f"Google API error: {data['status']}")
-
-#             # Decode the updated route polyline
-#             route_points = polyline.decode(data["routes"][0]["overview_polyline"]["points"])
-#             final_route = [{"lat": lat, "lng": lng} for lat, lng in route_points]
-#         else:
-#             final_route = initial_route
-
-#         return {"safe_route": final_route, "dangerous_areas": reduced_danger_areas}
-
-#     except HTTPException as e:
-#         logging.error(f"HTTPException in calculate_safe_route: {str(e)}")
-#         raise e
-#     except Exception as e:
-#         logging.error(f"Unexpected error in calculate_safe_route: {str(e)}")
-#         raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/api/safe-route")
@@ -1255,6 +1085,7 @@ def calculate_safe_route(start: str, destination: str):
                     clusters[label] = []
                 clusters[label].append(coords[idx])
 
+            # Calculate centroids
             centroids = [
                 {
                     "lat": np.mean([point[0] for point in points]),
@@ -1263,6 +1094,7 @@ def calculate_safe_route(start: str, destination: str):
                 for points in clusters.values()
             ]
 
+            # Limit the number of clusters
             if len(centroids) > max_clusters:
                 step = len(centroids) // max_clusters
                 centroids = centroids[::step][:max_clusters]
@@ -1335,68 +1167,6 @@ def calculate_safe_route(start: str, destination: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# -------------------------------------------------------------------------------------------------------------------------------------------------
-
-# @app.get("/api/regular-route")
-# def calculate_regular_route(start: str, destination: str):
-#     """
-#     Calculate a regular route using Google Maps Directions API, considering traffic data.
-#     """
-#     try:
-#         # Step 1: Geolocate start and destination
-#         start_location = geolocator.geocode(f"{start}")
-#         destination_location = geolocator.geocode(f"{destination}")
-
-#         if not start_location or not destination_location:
-#             raise HTTPException(status_code=400, detail="Invalid start or destination address.")
-
-#         start_coords = (start_location.latitude, start_location.longitude)
-#         destination_coords = (destination_location.latitude, destination_location.longitude)
-
-#         logging.debug(f"Start address: {start_location.address} -> Coordinates: {start_coords}")
-#         logging.debug(f"Destination address: {destination_location.address} -> Coordinates: {destination_coords}")
-
-#         # Step 2: Call Google Maps Directions API
-#         url = "https://maps.googleapis.com/maps/api/directions/json"
-#         params = {
-#             "origin": f"{start_coords[0]},{start_coords[1]}",
-#             "destination": f"{destination_coords[0]},{destination_coords[1]}",
-#             "mode": "driving",
-#             # "departure_time": "now",  # Use current traffic conditions
-#             # "traffic_model": "best_guess",
-#             "key": "AIzaSyAskOKGCw5PNkeh-Bl32GTWrc1OiEWP6do"
-#         }
-#         response = requests.get(url, params=params)
-#         if response.status_code != 200:
-#             raise HTTPException(status_code=500, detail=f"HTTP error: {response.status_code}, {response.text}")
-
-#         data = response.json()
-#         if data["status"] != "OK":
-#             raise HTTPException(status_code=500, detail=f"Google API error: {data['status']}")
-
-#         # Step 3: Decode the route polyline
-#         route_points = polyline.decode(data["routes"][0]["overview_polyline"]["points"])
-#         route = [{"lat": lat, "lng": lng} for lat, lng in route_points]
-
-#         # Step 4: Traffic information (if available)
-#         traffic_info = []
-#         for leg in data["routes"][0]["legs"]:
-#             for step in leg["steps"]:
-#                 traffic_info.append({
-#                     "start_location": step["start_location"],
-#                     "end_location": step["end_location"],
-#                     "duration_in_traffic": step.get("duration_in_traffic", {}).get("value")
-#                 })
-
-#         return {"route": route, "traffic_info": traffic_info}
-
-#     except HTTPException as e:
-#         logging.error(f"HTTPException in calculate_regular_route: {str(e)}")
-#         raise e
-#     except Exception as e:
-#         logging.error(f"Unexpected error in calculate_regular_route: {str(e)}")
-#         raise HTTPException(status_code=500, detail=str(e))
-
 @app.get("/api/regular-route")
 def calculate_regular_route(start: str, destination: str):
     """
@@ -1443,26 +1213,6 @@ def calculate_regular_route(start: str, destination: str):
         logging.error(f"Unexpected error in calculate_regular_route: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-
-
-# @app.get("/api/routes")
-# def get_combined_routes(start: str, destination: str):
-#     """
-#     Fetch both safe and regular routes.
-#     """
-#     try:
-#         # Fetch the safe route
-#         safe_route_data = calculate_safe_route(start, destination)
-#         safe_route = safe_route_data.get("safe_route", [])
-
-#         # Fetch the regular route
-#         regular_route_data = calculate_regular_route(start, destination)
-#         regular_route = regular_route_data.get("route", [])
-
-#         return {"safe_route": safe_route, "regular_route": regular_route}
-#     except Exception as e:
-#         logging.error(f"Error in get_combined_routes: {str(e)}")
-#         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/routes")
 def get_combined_routes(start: str, destination: str):

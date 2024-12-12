@@ -54,6 +54,8 @@ class TestCrimeDatabase(unittest.TestCase):
             WHERE ccn NOT IN (SELECT ccn FROM report_time);
         """)
         missing_ccns = self.cursor.fetchall()
+
+        # Assert that all of the keys exist in report_time
         self.assertEqual(len(missing_ccns), 0)
 
     def test_recent_updates(self):
@@ -67,12 +69,6 @@ class TestCrimeDatabase(unittest.TestCase):
         
         result = self.cursor.fetchone()
         recent_count, min_date, max_date = result
-
-        # Log debug information
-        print(f"Test Recent Updates Debug Info (Last 2 Days):")
-        print(f"Recent Count: {recent_count}")
-        print(f"Earliest Recent Report: {min_date}")
-        print(f"Latest Recent Report: {max_date}")
 
         # Assert there are rows within the last two days
         self.assertGreater(recent_count, 0, "No rows found in the last two days.")

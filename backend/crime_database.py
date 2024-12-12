@@ -32,6 +32,7 @@ def create_tables():
     if conn != None:
         cursor = conn.cursor()
 
+        # sql query used to create the report_time table
         create_report_time_table = """
         CREATE TABLE IF NOT EXISTS report_time (
             ccn INT PRIMARY KEY,
@@ -40,6 +41,7 @@ def create_tables():
         );
         """
 
+        # sql query used to create the report location table
         create_report_location_table = """
         CREATE TABLE IF NOT EXISTS report_location (
             ccn INT,
@@ -55,6 +57,7 @@ def create_tables():
         );
         """
 
+        # sql query used to create the offense and method table
         create_offense_and_method_table = """
         CREATE TABLE IF NOT EXISTS offense_and_method (
             ccn INT,
@@ -180,19 +183,18 @@ def delete_from_all_tables():
 
 
 
-def testing_database():
-    '''Checking to make sure things imported correctly'''
+def test_database_function():
+    '''Function used to do simple testing'''
     if conn != None:
         cursor = conn.cursor()
-
-        # cursor.execute("SELECT * FROM report_time inner join report_location on report_location.CCN = report_time.CCN inner join offense_and_method on offense_and_method.CCN = report_time.CCN WHERE MONTH(report_time.report_date_time) = 10 AND YEAR(report_time.report_date_time) = YEAR(CURDATE());")
 
         cursor.execute("SELECT * FROM report_time ORDER BY report_date_time DESC LIMIT 10;")
 
         print(cursor.fetchall())
 
-'''Function calls'''
+test_database_function()
+
+'''Uncomment the following lines to popualte the tables'''
 # create_tables()
 # populate_tables()
 # delete_from_all_tables()
-testing_database()
